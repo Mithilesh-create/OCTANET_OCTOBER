@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <script>
+      function dropOnFirst(e) {
+        e.preventDefault();
+        var data = e.dataTransfer.getData("text").split("-");
+        if (data[1] == "first") return;
+        if (data[1] == "second") {
+          var storedInProgressTasks =
+            JSON.parse(localStorage.getItem("inprogress")) || [];
+          storedInProgressTasks = storedInProgressTasks.filter(
+            (e) => e != data[0].trim()
+          );
+          localStorage.setItem(
+            "inprogress",
+            JSON.stringify(storedInProgressTasks)
+          );
+          secondArrFetch();
+        } else {
+          var storedCompletedTasks =
+            JSON.parse(localStorage.getItem("completed")) || [];
+          storedCompletedTasks = storedCompletedTasks.filter(
+            (e) => e != data[0].trim()
+          );
+          localStorage.setItem(
+            "completed",
+            JSON.stringify(storedCompletedTasks)
+          );
+          thirdArrFetch();
+        }
+        var storedNewTasks = JSON.parse(localStorage.getItem("new")) || [];
+        storedNewTasks.push(data[0].trim());
+        localStorage.setItem("new", JSON.stringify(storedNewTasks));
+        firstArrFetch();
+      }
+      function dropOnSecond(e) {
+        e.preventDefault();
+        var data = e.dataTransfer.getData("text").split("-");
+        console.log(data[0].trim());
+        
+        if (data[1] == "second") return;
+        if (data[1] == "first") {
+          var storedNewTasks = JSON.parse(localStorage.getItem("new")) || [];
+          storedNewTasks = storedNewTasks.filter((e) => e != data[0].trim());
+          console.log("update",storedNewTasks);
+          localStorage.setItem("new", JSON.stringify(storedNewTasks));
+          firstArrFetch();
+        } else {
+          var storedCompletedTasks =
+            JSON.parse(localStorage.getItem("completed")) || [];
+          storedCompletedTasks = storedCompletedTasks.filter(
+            (e) => e != data[0].trim()
+          );
+          localStorage.setItem(
+            "completed",
+            JSON.stringify(storedCompletedTasks)
+          );
+          thirdArrFetch();
+        }
+        var storedInProgressTasks =
+          JSON.parse(localStorage.getItem("inprogress")) || [];
+        storedInProgressTasks.push(data[0].trim());
+        localStorage.setItem(
+          "inprogress",
+          JSON.stringify(storedInProgressTasks)
+        );
+        secondArrFetch();
+      }
+      function dropOnThird(e) {
+        e.preventDefault();
+        var data = e.dataTransfer.getData("text").split("-");
+        if (data[1] == "third") return;
+        console.log(data[0].trim());
+
+        if (data[1] == "first") {
+          var storedNewTasks = JSON.parse(localStorage.getItem("new")) || [];
+          storedNewTasks = storedNewTasks.filter((e) => e != data[0].trim());
+          localStorage.setItem("new", JSON.stringify(storedNewTasks));
+          firstArrFetch();
+        } else {
+          var storedInProgressTasks =
+            JSON.parse(localStorage.getItem("inprogress")) || [];
+          storedInProgressTasks = storedInProgressTasks.filter(
+            (e) => e != data[0].trim()
+          );
+          localStorage.setItem(
+            "inprogress",
+            JSON.stringify(storedInProgressTasks)
+          );
+          secondArrFetch();
+        }
+        var storedCompletedTasks =
+          JSON.parse(localStorage.getItem("completed")) || [];
+        storedCompletedTasks.push(data[0].trim());
+        localStorage.setItem("completed", JSON.stringify(storedCompletedTasks));
+        thirdArrFetch();
+      }
+
+      function addTask(e) {
+        var storedNewTasks = JSON.parse(localStorage.getItem("new")) || [];
+        const task = document.getElementById("taskAdder");
+        storedNewTasks.push(task.value.trim());
+        localStorage.setItem("new", JSON.stringify(storedNewTasks));
+        task.value = "";
+        firstArrFetch();
+      }
+    </script>
+    <div class="main">
+      <div class="title">
+        <img
+          src="https://cdn.worldvectorlogo.com/logos/kali-1.svg"
+          height="60"
+        />
+      </div>
+      <div class="firstBlock">
+        <input
+          type="text"
+          placeholder="New bug, Feature, ..."
+          autocomplete="off"
+          id="taskAdder"
+        />
+        <button onclick="addTask()"><i class="fa-solid fa-plus"></i></button>
+      </div>
+      <div class="secondBlock">
+        <div
+          class="first"
+          ondrop="dropOnFirst(event)"
+          ondragover="allowDrop(event)"
+        >
+          <p>Newly Added</p>
+          <div id="first"></div>
+        </div>
+        <div
+          class="second"
+          ondrop="dropOnSecond(event)"
+          ondragover="allowDrop(event)"
+        >
+          <p>In Progress</p>
+          <div id="second"></div>
+        </div>
+        <div
+          class="third"
+          ondrop="dropOnThird(event)"
+          ondragover="allowDrop(event)"
+        >
+          <p>Completed</p>
+          <div id="third"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
