@@ -57,13 +57,11 @@
       function dropOnSecond(e) {
         e.preventDefault();
         var data = e.dataTransfer.getData("text").split("-");
-        console.log(data[0].trim());
-        
+
         if (data[1] == "second") return;
         if (data[1] == "first") {
           var storedNewTasks = JSON.parse(localStorage.getItem("new")) || [];
           storedNewTasks = storedNewTasks.filter((e) => e != data[0].trim());
-          console.log("update",storedNewTasks);
           localStorage.setItem("new", JSON.stringify(storedNewTasks));
           firstArrFetch();
         } else {
@@ -91,7 +89,6 @@
         e.preventDefault();
         var data = e.dataTransfer.getData("text").split("-");
         if (data[1] == "third") return;
-        console.log(data[0].trim());
 
         if (data[1] == "first") {
           var storedNewTasks = JSON.parse(localStorage.getItem("new")) || [];
@@ -120,11 +117,13 @@
       function addTask(e) {
         var storedNewTasks = JSON.parse(localStorage.getItem("new")) || [];
         const task = document.getElementById("taskAdder");
+        if (task.value.trim() === "") return;
         storedNewTasks.push(task.value.trim());
         localStorage.setItem("new", JSON.stringify(storedNewTasks));
         task.value = "";
         firstArrFetch();
       }
+      
     </script>
     <div class="main">
       <div class="title">
@@ -140,7 +139,9 @@
           autocomplete="off"
           id="taskAdder"
         />
-        <button onclick="addTask()"><i class="fa-solid fa-plus"></i></button>
+        <button id="addNewTask" onclick="addTask()">
+          <i class="fa-solid fa-plus"></i>
+        </button>
       </div>
       <div class="secondBlock">
         <div

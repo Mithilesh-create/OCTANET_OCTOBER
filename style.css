@@ -109,7 +109,19 @@ body {
   min-height: 120px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   cursor: grab;
+}
+.item > h4 {
+  width: 80%;
+  word-wrap: break-word;
+}
+.item > div > i {
+  cursor: pointer;
+  padding: 20px;
+}
+.item > div > i:hover {
+  color: red;
 }
 .first > div > .item {
   background: #667db6;
@@ -135,7 +147,7 @@ body {
   background: linear-gradient(to right, #434343, #000000);
 }
 
-.third > div >.item> h4 {
+.third > div > .item > h4 {
   text-decoration: line-through;
 }
 
